@@ -1,8 +1,12 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <math.h>
+#include <ctime>
 
-void render();
+using namespace std;
+
+void render(double);
 
 int main() {
     // Initialize GLFW
@@ -28,19 +32,20 @@ int main() {
 
     // Initialize GLEW
     if (glewInit() != GLEW_OK) {
-        std::cerr << "Failed to initialize GLEW" << std::endl;
+        cerr << "Failed to initialize GLEW" << endl;
         return -1;
     }
 
     // Get version and renderer information
     const GLubyte* renderer = glGetString(GL_RENDERER);
     const GLubyte* version = glGetString(GL_VERSION);
-    std::cout << "Renderer: " << renderer << std::endl;
-    std::cout << "OpenGL version supported: " << version << std::endl;
+    cout << "Renderer: " << renderer << endl;
+    cout << "OpenGL version supported: " << version << endl;
 
     // Main render loop
     while (!glfwWindowShouldClose(window)) {
-        render();
+        time_t currentTime = time(nullptr);
+        render(currentTime);
 
         // Swap buffers and poll events
         glfwSwapBuffers(window);
@@ -52,8 +57,11 @@ int main() {
     return 0;
 }
 
-void render(){
+void render(double currentTime){
     // Set clear color
-    static const GLfloat red[] = {1.0f, 0.0f, 0.0f, 1.0f};
-    glClearBufferfv(GL_COLOR, 0, red);
+    const GLfloat color[] = { 
+        (float)sin(currentTime) * 0.5f + 0.5f,
+        (float)cos(currentTime) * 0.5f + 0.5f,
+        0.0f, 1.0f};
+    glClearBufferfv(GL_COLOR, 0, color);
 }
